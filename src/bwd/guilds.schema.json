@@ -82,7 +82,7 @@
         "configurable": true
     },
     "prefix": {
-        "type": "integer",
+        "type": "string",
         "array": false,
         "default": "!",
         "min": null,
@@ -127,7 +127,7 @@
         "configurable": true
     },
     "leaderboardAmount": {
-        "type": "string",
+        "type": "integer",
         "array": false,
         "default": "10",
         "min": null,
