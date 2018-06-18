@@ -10,6 +10,7 @@ auth.js
 jsconfig.json
 config.json
 config.js
+data/
 src/config.js
 **/provider/**
 
