@@ -1,5 +1,6 @@
 const { Command } = require('klasa');
 const fs = require('fs')
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
 
@@ -47,7 +48,7 @@ module.exports = class extends Command {
             const placeWeek = this.client.getTopList('7d', message.guild.id).map(topListWeek => topListWeek.id).indexOf(message.author.id) + 1
             const placeDay = this.client.getTopList('today', message.guild.id).map(topListDay => topListDay.id).indexOf(message.author.id) + 1
             const placeAll = this.client.getTopList('', message.guild.id).map(topListAll => topListAll.id).indexOf(message.author.id) + 1
-            const embed = new Discord.RichEmbed()
+            const embed = new MessageEmbed()
                 .setAuthor('Your personal leaderboard', message.author.avatarURL)
                 .setColor(0x00AE86)
                 .setFooter(`Leaderboard updated at: ${fs.readFileSync(`./data/cache/${message.guild.id}/date.txt`)}`)
@@ -85,7 +86,7 @@ module.exports = class extends Command {
             const placeWeek = this.client.getTopList('7d', message.guild.id).map(topListWeek => topListWeek.id).indexOf(message.mentions.users.first().id) + 1
             const placeDay = this.client.getTopList('today', message.guild.id).map(topListDay => topListDay.id).indexOf(message.mentions.users.first().id) + 1
             const placeAll = this.client.getTopList('', message.guild.id).map(topListAll => topListAll.id).indexOf(message.mentions.users.first().id) + 1
-            const embed = new Discord.RichEmbed()
+            const embed = new MessageEmbed()
                 .setAuthor(`${message.mentions.users.first().username}'s personal leaderboard`, message.mentions.users.first().avatarURL)
                 .setColor(0x00AE86)
                 .setFooter(`Leaderboard updated at: ${fs.readFileSync(`./data/cache/${message.guild.id}/date.txt`)}`)

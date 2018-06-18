@@ -1,5 +1,5 @@
 const { Client } = require('klasa');
-const { config, token } = require('./config');
+const { config, token, GoogleAPI, GoogleCSE } = require('./config');
 
 const fs = require('fs')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
@@ -176,8 +176,9 @@ class MyKlasaClient extends Client {
             }
             // Filter the correct time out of the array
             if (since !== undefined && since.length > 0) {
+                let since2 = this.sinceDate(since)
                 userObject = userObject.filter(function (value) {
-                    return new Date(value.date) > sinceDate(since)
+                    return new Date(value.date) > since2
                 })
             }
             // Return the length of the array (minutes of playtime)
@@ -255,11 +256,11 @@ class MyKlasaClient extends Client {
         if (fs.existsSync(`./data/cache/${guildID}/always.json`) && newBoolean !== true && since === undefined) {
             return JSON.parse(fs.readFileSync(`./data/cache/${guildID}/always.json`))
         }
-        const guild = guilds.find('id', guildID)
+        const guild = this.guilds.find(guild => guild.id === guildID)
         function topUsers(user, id) {
             if (user.bot) { return }
-            if (fs.existsSync(`./data/userdata/${id}.csv`) === true && this.privateCheck(id) === false) {
-                return { id: id, minutes: timePlayed(id, guild.configs.defaultGame, since) }
+            if (fs.existsSync(`./data/userdata/${id}.csv`) === true && guild.client.privateCheck(id) === false) {
+                return { id: id, minutes: user.client.timePlayed(id, guild.configs.defaultGame, since) }
             }
 
             return undefined
@@ -318,24 +319,24 @@ class MyKlasaClient extends Client {
                     break
                 }
                 if (i === 0) {
-                    if (timePlayed(topList[i].id, guildConf.defaultGame, since, true) > 0) {
+                    if (guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true) > 0) {
                         if (guildConf.enableRankingMentions === 'true') {
-                            string += `1. <@${guild.members.find('id', topList[i].id).user.id}> 👑 *- ${timeConvert(timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
+                            string += `1. <@${guild.members.find(member => member.id === topList[i].id).user.id}> 👑 *- ${guild.client.timeConvert(guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
                             amount++
                         }
                         else {
-                            string += `1. **${guild.members.find('id', topList[i].id).user.tag}** 👑 *- ${timeConvert(timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
+                            string += `1. **${guild.members.find(member => member.id === topList[i].id).user.tag}** 👑 *- ${guild.client.timeConvert(guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
                             amount++
                         }
                     }
                 }
-                else if (timePlayed(topList[i].id, guildConf.defaultGame, since, true) > 0) {
+                else if (guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true) > 0) {
                     if (guildConf.enableRankingMentions === 'true') {
-                        string += `${i + 1}. <@${guild.members.find('id', topList[i].id).user.id}> *- ${timeConvert(timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
+                        string += `${i + 1}. <@${guild.members.find(member => member.id === topList[i].id).user.id}> *- ${guild.client.timeConvert(guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
                         amount++
                     }
                     else {
-                        string += `${i + 1}. **${guild.members.find('id', topList[i].id).user.tag}** *- ${timeConvert(timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
+                        string += `${i + 1}. **${guild.members.find(member => member.id === topList[i].id).user.tag}** *- ${guild.client.timeConvert(guild.client.timePlayed(topList[i].id, guildConf.defaultGame, since, true))}*\n`
                         amount++
                     }
                 }
@@ -350,9 +351,9 @@ class MyKlasaClient extends Client {
             }
             return string
         }
-        const topListWeek = getTopList('7d', guild.id, true)
-        const topListDay = getTopList('today', guild.id, true)
-        const topListAll = getTopList('', guild.id, true)
+        const topListWeek = this.getTopList('7d', guild.id, true)
+        const topListDay = this.getTopList('today', guild.id, true)
+        const topListAll = this.getTopList('', guild.id, true)
         if (!fs.existsSync(`./data/cache/${guild.id}`)) {
             fs.mkdirSync(`./data/cache/${guild.id}`)
         }
@@ -372,7 +373,7 @@ class MyKlasaClient extends Client {
             const rankingChannel = guild.channels.find(channel => channel.id === rankingChannelID)
             if (rankingChannel) {
                 // Permission check
-                const botMember = guild.members.find(member => member.id === user.id)
+                const botMember = guild.members.find(member => member.id === guild.me.id)
                 if (botMember.permissionsIn(rankingChannel).has('VIEW_CHANNEL') === false) {
                     return console.log(`No permissions to read messages in ranking channel, aborting (server: ${guild.name})`)
                 }
@@ -382,18 +383,18 @@ class MyKlasaClient extends Client {
                 if (botMember.permissionsIn(rankingChannel).has('MANAGE_MESSAGES') === false) {
                     return console.log(`No permissions to manage messages in ranking channel, aborting (server: ${guild.name})`)
                 }
-                fetchBotMessages(20, rankingChannel)
+                guild.client.fetchBotMessages(20, rankingChannel)
                     .then((message) => {
                         if (message === undefined) {
-                            purge(50, rankingChannel).catch(err => { console.log('Error purging rankingChannel!\n' + err) })
+                            guild.client.purge(50, rankingChannel).catch(err => { console.log('Error purging rankingChannel!\n' + err) })
                             console.log(`${Date()}: Calculating ${guild.name} leaderboard...`)
-                            rankingChannel.send(getLeaderboardString(guild, guild.configs))
+                            rankingChannel.send(guild.client.getLeaderboardString(guild, guild.configs))
                             console.log(`${Date()}: ${guild.name}: Leaderboard sent!`)
                         }
                         else {
                             console.log(`${Date()}: Calculating ${guild.name} leaderboard...`)
-                            message.edit(getLeaderboardString(guild, message.guild.configs))
-                            purge(50, rankingChannel).catch(err => { console.log('Error purging rankingChannel!\n' + err) })
+                            message.edit(guild.client.getLeaderboardString(guild, message.guild.configs))
+                            guild.client.purge(50, rankingChannel).catch(err => { console.log('Error purging rankingChannel!\n' + err) })
                             console.log(`${Date()}: ${guild.name}: Leaderboard updated!`)
                         }
                     })
@@ -405,7 +406,7 @@ class MyKlasaClient extends Client {
     }
 
     async fetchBotMessages(limit, channel) {
-        const fetched = await channel.fetchMessages({ limit: limit })
+        const fetched = await channel.messages
         if (fetched.first()) {
             const botFetched = fetched.filter(currentMSG => currentMSG.author.id === user.id)
             if (botFetched.first()) {
@@ -419,7 +420,7 @@ class MyKlasaClient extends Client {
     async purge(purgeLimit, channel) {
         const weekAgo = new Date()
         weekAgo.setDate(weekAgo.getDate() - 7)
-        let fetched = await channel.fetchMessages({ limit: purgeLimit })
+        let fetched = await channel.messages
         if (fetched.first()) {
             // Filteren
             fetched = fetched.filter(currentMSG => currentMSG.author.id !== user.id)
@@ -440,7 +441,7 @@ class MyKlasaClient extends Client {
             return fs.readFileSync(`./data/thumbnails/${searchQuery}.csv`).toString()
         }
         const xmlHttp = new XMLHttpRequest()
-        xmlHttp.open('GET', `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${config.GoogleCSE}&filter=0&imgSize=icon&num=1&key=${config.GoogleAPI}`, false)
+        xmlHttp.open('GET', `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${GoogleCSE}&filter=0&imgSize=icon&num=1&key=${GoogleAPI}`, false)
         xmlHttp.send(null)
         const searchThumbnail = xmlHttp.responseText
         const searchObject = JSON.parse(searchThumbnail)

@@ -180,3 +180,5 @@ exports.config = {
 
 // The token for this bot to login with
 exports.token = '';
+exports.GooGleAPI = ''
+exports.GoogleCSE = ''
