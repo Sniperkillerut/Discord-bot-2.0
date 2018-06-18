@@ -179,6 +179,6 @@ exports.config = {
 };
 
 // The token for this bot to login with
-exports.token = 'process.env.DISCORDTOKEN';
-exports.GoogleAPI = 'process.env.GOOGLEAPI'
-exports.GoogleCSE = 'process.env.GOOGLECSE'
+exports.token = process.env.DISCORDTOKEN
+exports.GoogleAPI = process.env.GOOGLEAPI
+exports.GoogleCSE = process.env.GOOGLECSE
