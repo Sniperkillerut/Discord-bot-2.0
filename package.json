@@ -1,0 +1,24 @@
+{
+  "name": "bot2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js",
+    "fast-html-parser": "^1.0.1",
+    "figlet": "^1.2.0",
+    "klasa": "github:dirigeants/klasa",
+    "moment": "^2.22.2",
+    "moment-duration-format": "^2.2.2",
+    "snekfetch": "^4.0.1",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,145 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true,
+             "generators": true,
+             "impliedStrict":true
+        },
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": ["warn", 2, {
+            "SwitchCase": 1,
+            "VariableDeclarator": {
+                "var": 2,
+                "let": 2,
+                "const": 3
+            },
+            "MemberExpression": 1
+            }],
+        "linebreak-style": ["warn", "windows"],
+        "quotes": ["warn", "single"],
+        "semi": ["error", "never"],
+        "curly":"error",
+        "default-case":"error",
+        "no-console": "off",
+        "block-scoped-var": "warn",
+        "dot-location": ["warn","property"],
+        "dot-notation": "warn",
+        "eqeqeq": "warn",
+        "guard-for-in": "warn",
+        "no-else-return": ["error",{"allowElseIf": true }],
+        "no-empty-function": "warn",
+        "no-eval": "warn",
+        "no-implied-eval": "warn",
+        "no-invalid-this": "warn",
+        "no-floating-decimal": "error",
+        "no-lone-blocks": "error",
+        "no-magic-numbers": ["off", { "ignore": [0,1], "ignoreArrayIndexes": true}],
+        "no-multi-spaces": [
+            "warn",
+            { "ignoreEOLComments": true,
+                "exceptions": {
+                    "Property": true,
+                    "VariableDeclarator": true,
+                    "ImportDeclaration": true
+                }
+            }
+        ],
+        "key-spacing": [
+            "warn",
+            {
+                "align": {
+                    "beforeColon": true,
+                    "afterColon": true,
+                    "on": "colon"
+                }
+            }
+        ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true,
+                "after":true
+            }
+        ],
+        "brace-style": [
+            "error",
+            "stroustrup",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "comma-style": [
+            "error",
+            "last"
+        ],
+        "no-duplicate-imports": [
+            "error",
+            {
+                "includeExports": true
+            }
+        ],
+        "no-var": "warn",
+        "prefer-const": [
+        "error", {
+            "destructuring": "any",
+            "ignoreReadBeforeAssign": false
+        }
+        ],
+        "no-confusing-arrow": "warn",
+        "no-unneeded-ternary": "error",
+        "no-trailing-spaces": "error",
+        "no-lonely-if": "error",
+        "no-multi-str": "error",
+        "no-new": "error",
+        "no-new-func": "error",
+        "no-new-wrappers": "error",
+        "no-return-assign": "error",
+        "no-return-await":"error",
+        "no-self-compare":"error",
+        "no-sequences":"error",
+        "no-throw-literal": "error",
+        "no-unused-expressions": "error",
+        "no-useless-call": "error",
+        "no-useless-concat": "error",
+        "no-useless-return": "error",
+        "no-with": "error",
+        "no-shadow": "warn",
+        "no-catch-shadow": "error",
+        "no-shadow-restricted-names": "error",
+        "prefer-promise-reject-errors": "error",
+        "require-await": "warn",
+        "no-warning-comments": ["off", { "terms": ["todo", "fixme", "xxx"], "location": "start" }],
+        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used" }],
+        "comma-dangle": ["error", "never"],
+        "vars-on-top": "warn",
+        "wrap-iife": [
+            "error",
+            "inside"
+        ],
+        "yoda": [
+            "error",
+            "never",
+            {
+                "exceptRange": true,
+                "onlyEquality": true
+            }
+        ]
+    }
+}
