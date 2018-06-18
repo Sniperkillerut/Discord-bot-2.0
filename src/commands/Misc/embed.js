@@ -14,7 +14,7 @@ module.exports = class extends Command {
             requiredSettings: [],
             description: 'Make the Bot say things',
             quotedStringSupport: false,
-            usage: '[channel:channel] <message:string> [...]',
+            usage: '',
             usageDelim: ' ',
             extendedHelp: 'No extended help available.'
         })
