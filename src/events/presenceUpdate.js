@@ -40,13 +40,15 @@ module.exports = class extends Event {
                     .then(role => {
                         // client.logger.log(`[AUTO-ROLE CREATED] Created new role with name ${role.name} and color ${role.color}`)
                         newMember.roles.add(role)
+                    .catch(console.error)
                         // const role2 = guild.roles.find('name', `In ${game_new.name}`)
                         // client.logger.cmd(`[AUTO-ROLE CREATED] adding person ${newMember.user.username} to role ${role2.name}, currently ${role2.members.size} members of said role.`)
                     })
                     .catch(console.error)
             }
             else {
-                await newMember.roles.add(playRole)
+                newMember.roles.add(playRole)
+                    .catch(console.error)
                 // const role = guild.roles.find('name', `In ${game_new.name}`)
                 // client.logger.cmd(`[AUTO-ROLE SET] adding person ${newMember.user.username} to role ${role.name}, currently ${role.members.size} members of said role.`)
             }
@@ -54,12 +56,22 @@ module.exports = class extends Event {
         if (game_old) {
             const playRole = guild.roles.find(role => role.name === `In ${game_old.name}`)
             if (playRole && newMember.roles.has(playRole.id)) {
-                await newMember.roles.remove(playRole)
-                const role = guild.roles.find(role => role.name === `In ${game_old.name}`)
+                newMember.roles.remove(playRole,'playing stop')
+                    .catch(console.error)
+
+                //const role = guild.roles.find(role => role.name === `In ${game_old.name}`)
                 // client.logger.cmd(`[AUTO-ROLE UNSET] removing person ${newMember.user.username} from role ${role.name}, currently ${role.members.size} members of said role.`)
-                if (role.members.size === 0) {
+                //if(role.members.size === 0) {
+                if (playRole.members.size === 1) {
+
+                    //promise error, gets rejected, apparently discord is responding with an empty json and the lib dont like it
+                    //so no async solution avaliable for now
+                    //for both role.add and role.delete
+
                     // client.logger.cmd(`[AUTO-ROLE DELETE] role ${role.name} is currently empty, deleting said role.`)
-                    role.delete()
+                    // role.delete()
+                    playRole.delete()
+                    .catch (console.error)
                 }
             }
         }
