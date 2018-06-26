@@ -408,7 +408,7 @@ class MyKlasaClient extends Client {
     async fetchBotMessages(limit, channel) {
         const fetched = await channel.messages
         if (fetched.first()) {
-            const botFetched = fetched.filter(currentMSG => currentMSG.author.id === user.id)
+            const botFetched = fetched.filter(currentMSG => currentMSG.author.id === this.user.id)
             if (botFetched.first()) {
                 return botFetched.first()
             }
@@ -418,19 +418,17 @@ class MyKlasaClient extends Client {
     }
 
     async purge(purgeLimit, channel) {
-        const weekAgo = new Date()
-        weekAgo.setDate(weekAgo.getDate() - 7)
-        let fetched = await channel.messages
+        const filter = currentMSG => currentMSG.author.id !== this.user.id
+        fetched = await channel.awaitMessages(filter, { max: 4, time: 6000, errors: ['time'] })
+            .then(collected => {
+               console.log(collected.size)
+                channel.bulkDelete(collected)
+            })
         if (fetched.first()) {
             // Filteren
             fetched = fetched.filter(currentMSG => currentMSG.author.id !== user.id)
-            // Deleten als er een fetched is
-            /*function deleteMessage(currentMessage) {
-              return currentMessage.message.delete()
-            }*/
             channel.bulkDelete(fetched)
         }
-        fetched = fetched.filter(function (msg) { return msg.author.id === '423433861167579136' })
     }
 
     getThumbnail(game) {
