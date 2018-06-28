@@ -22,20 +22,21 @@ module.exports = class extends Event {
             return
         }
         if (game_new) {
-            const playRole = guild.roles.find(role => role.name === `In ${game_new.name}`)
+            const game_name = game_new.name.trim();
+            const playRole = guild.roles.find(role => role.name === `In ${game_name}`)
             if (!playRole) {
                 const color = '#' + Math.floor(Math.random() * 16777215).toString(16)
                 //const botrole = guild.roles.find('name', client.config.name)
                 //client.logger.log(`[AUTO-ROLE CREATED] bot role position: ${botrole.position}`)
                 guild.roles.create({
                     data: {
-                        name: `In ${game_new.name}`,
+                        name: `In ${game_name}`,
                         color: color,
                         mentionable: true,
                         hoist: true,
                         position: 2
                     },
-                    reason: `Automatic role for ${game_new.name} players`
+                    reason: `Automatic role for ${game_name} players`
                 })
                     .then(role => {
                         // client.logger.log(`[AUTO-ROLE CREATED] Created new role with name ${role.name} and color ${role.color}`)
@@ -54,11 +55,13 @@ module.exports = class extends Event {
             }
         }
         if (game_old) {
-            const playRole = guild.roles.find(role => role.name === `In ${game_old.name}`)
-            if (playRole && newMember.roles.has(playRole.id)) {
+            const game_name = game_old.name.trim();
+            const playRole = guild.roles.find(role => role.name === `In ${game_name}`)
+            if (playRole) {
+                /*
                 newMember.roles.remove(playRole,'playing stop')
                     .catch(console.error)
-
+                */
                 //const role = guild.roles.find(role => role.name === `In ${game_old.name}`)
                 // client.logger.cmd(`[AUTO-ROLE UNSET] removing person ${newMember.user.username} from role ${role.name}, currently ${role.members.size} members of said role.`)
                 //if(role.members.size === 0) {
@@ -72,6 +75,9 @@ module.exports = class extends Event {
                     // role.delete()
                     playRole.delete()
                     .catch (console.error)
+                } else if (newMember.roles.has(playRole.id)){
+                    newMember.roles.remove(playRole,'playing stop')
+                    .catch(console.error)
                 }
             }
         }
