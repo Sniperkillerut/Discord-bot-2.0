@@ -19,16 +19,16 @@ module.exports = class extends Command {
         })
     }
 
-    async run(msg, [member, reason]) {
+    async run(msg, [member, ...reason]) {
         //if (!reason) return msg.reply('You did not provide a reason. Please try again.')
         if (member.id === msg.author.id) return msg.reply('Why would you kick yourself?')
         if (member.id === this.client.user.id) return msg.reply('Have I done something wrong?')
-        if (member.highestRole.position >= msg.member.highestRole.position) return msg.reply('You cannot kick this user.')
+        if (member.roles.highest.position >= msg.member.roles.highest.position) return msg.reply('You cannot kick this user.')
         if (member.kickable === false) return msg.reply('I cannot kick this user.')
 
-        reason = reason.length > 0 ? reason.join(' ') : reason
+        reason = reason.length > 0 ? reason.join(' ') : null
         await member.kick(reason)
-        return msg.send(`${member.user.tag} got kicked.${reason ? ` With reason of: ${reason}` : ''}`)
+        return msg.sendMessage(`${member.user.tag} got kicked.${reason ? ` With reason of: ${reason}` : ''}`)
     }
 
     async init() {
