@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "github:discordjs/discord.js#master",
     "fast-html-parser": "^1.0.1",
     "figlet": "^1.2.0",
-    "klasa": "github:dirigeants/klasa",
+    "klasa": "github:dirigeants/klasa#master",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
     "snekfetch": "^4.0.1",
