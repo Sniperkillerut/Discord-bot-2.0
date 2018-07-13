@@ -1,7 +1,7 @@
 const { Client } = require('klasa');
-const { config, token, GoogleAPI, GoogleCSE } = require('./config');
+const { config, token_test, GoogleAPI, GoogleCSE } = require('./config');
 
-const fs = require('fs')
+const fs             = require('fs')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 
 class MyKlasaClient extends Client {
@@ -15,7 +15,7 @@ class MyKlasaClient extends Client {
     // Add any methods to your Klasa Client
 
     sinceDate(since) {
-        const d = new Date()
+        const d   = new Date()
         const num = Number(since.substring(0, since.length - 1))
 
         if (since.endsWith('m')) {
@@ -43,10 +43,10 @@ class MyKlasaClient extends Client {
         if (n < 0) {
             return n
         }
-        const num = n
-        const hours = (num / 60)
-        const rhours = Math.floor(hours)
-        const minutes = (hours - rhours) * 60
+        const num      = n
+        const hours    = (num / 60)
+        const rhours   = Math.floor(hours)
+        const minutes  = (hours - rhours) * 60
         const rminutes = Math.round(minutes)
         if (rhours === 0 && minutes === 0) {
             return 'no'
@@ -85,7 +85,7 @@ class MyKlasaClient extends Client {
 
     ordinalSuffix(i) {
         const j = i % 10,
-            k = i % 100
+              k = i % 100
         if (j === 1 && k !== 11) {
             return i + 'st'
         }
@@ -129,11 +129,11 @@ class MyKlasaClient extends Client {
     }
 
     MSDays(t) {
-        const cd = 24 * 60 * 60 * 1000
-        const ch = 60 * 60 * 1000
-        let d = Math.floor(t / cd)
-        let h = Math.floor((t - d * cd) / ch)
-        let m = Math.round((t - d * cd - h * ch) / 60000)
+        const cd  = 24 * 60 * 60 * 1000
+        const ch  = 60 * 60 * 1000
+        let   d   = Math.floor(t / cd)
+        let   h   = Math.floor((t - d * cd) / ch)
+        let   m   = Math.round((t - d * cd - h * ch) / 60000)
         const pad = function (n) { return n < 10 ? '0' + n : n }
         if (m === 60) {
             h++
@@ -176,8 +176,8 @@ class MyKlasaClient extends Client {
             }
             // Filter the correct time out of the array
             if (since !== undefined && since.length > 0) {
-                let since2 = this.sinceDate(since)
-                userObject = userObject.filter(function (value) {
+                let since2     = this.sinceDate(since)
+                    userObject = userObject.filter(function (value) {
                     return new Date(value.date) > since2
                 })
             }
@@ -198,7 +198,7 @@ class MyKlasaClient extends Client {
         let userStatus
         let embedColor
         const onlineEmoji = this.emojis.find( emoji => emoji.name === 'online')
-        const idleEmoji = this.emojis.find(emoji => emoji.name === 'idle')
+        const idleEmoji   = this.emojis.find(emoji => emoji.name === 'idle')
         if (user.presence.status === 'dnd') {
             userStatus = 'do not disturb :no_entry:'
             embedColor = '#db2525'
@@ -267,7 +267,7 @@ class MyKlasaClient extends Client {
 
         }
         let topList = guild.members.map(topUsers)
-        topList = topList.filter(value => value !== undefined)
+            topList = topList.filter(value => value !== undefined)
         return topList.sort(function (a, b) { return (b.minutes > a.minutes) ? 1 : ((a.minutes > b.minutes) ? -1 : 0) })
     }
 
@@ -278,20 +278,20 @@ class MyKlasaClient extends Client {
             let emptyString
             let noMoreString
             if (since === '7d') {
-                topList = topListWeek
-                emptyString = `No one played ${guildConf.defaultGame} this week!`
-                noMoreString = `No more users played ${guildConf.defaultGame} this week!`
-                const d = new Date()
+                            topList      = topListWeek
+                            emptyString  = `No one played ${guildConf.defaultGame} this week!`
+                            noMoreString = `No more users played ${guildConf.defaultGame} this week!`
+                      const d            = new Date()
                 d.setDate(d.getDate() - 7)
                 if (guild.joinedAt > d) {
                     return `${string}I joined this server less than a week ago, so this leaderboard would be the same as the "Always" leaderboard. Go check out that one!`
                 }
             }
             if (since === 'today') {
-                topList = topListDay
-                emptyString = `No one played ${guildConf.defaultGame} today!`
-                noMoreString = `No more users played ${guildConf.defaultGame} today!`
-                const vanochtend = new Date()
+                            topList      = topListDay
+                            emptyString  = `No one played ${guildConf.defaultGame} today!`
+                            noMoreString = `No more users played ${guildConf.defaultGame} today!`
+                      const vanochtend   = new Date()
                 vanochtend.setHours(6)
                 vanochtend.setMinutes(0)
                 vanochtend.setSeconds(0)
@@ -302,11 +302,11 @@ class MyKlasaClient extends Client {
             }
             if (since === undefined || since === '') {
                 noMoreString = `No more users have ever played ${guildConf.defaultGame}!`
-                emptyString = `No one has ever played ${guildConf.defaultGame}!`
-                topList = topListAll
+                emptyString  = `No one has ever played ${guildConf.defaultGame}!`
+                topList      = topListAll
             }
-            const l = guildConf.leaderboardAmount
-            let amount = 0
+            const l      = guildConf.leaderboardAmount
+            let   amount = 0
             let i
             for (i = 0; i < l; i++) {
                 if (topList === undefined) {
@@ -352,8 +352,8 @@ class MyKlasaClient extends Client {
             return string
         }
         const topListWeek = this.getTopList('7d', guild.id, true)
-        const topListDay = this.getTopList('today', guild.id, true)
-        const topListAll = this.getTopList('', guild.id, true)
+        const topListDay  = this.getTopList('today', guild.id, true)
+        const topListAll  = this.getTopList('', guild.id, true)
         if (!fs.existsSync(`./data/cache/${guild.id}`)) {
             fs.mkdirSync(`./data/cache/${guild.id}`)
         }
@@ -370,7 +370,7 @@ class MyKlasaClient extends Client {
                 return
             }
             const rankingChannelID = guild.configs.rankingChannel.replace('<#', '').replace('>', '')
-            const rankingChannel = guild.channels.find(channel => channel.id === rankingChannelID)
+            const rankingChannel   = guild.channels.find(channel => channel.id === rankingChannelID)
             if (rankingChannel) {
                 // Permission check
                 const botMember = guild.members.find(member => member.id === guild.me.id)
@@ -418,8 +418,8 @@ class MyKlasaClient extends Client {
     }
 
     async purge(purgeLimit, channel) {
-        const filter = currentMSG => currentMSG.author.id !== this.user.id
-        fetched = await channel.awaitMessages(filter, { max: 4, time: 6000, errors: ['time'] })
+        const filter  = currentMSG => currentMSG.author.id !== this.user.id
+              fetched = await channel.awaitMessages(filter, { max: 4, time: 6000, errors: ['time'] })
             .then(collected => {
                console.log(collected.size)
                 channel.bulkDelete(collected)
@@ -442,7 +442,7 @@ class MyKlasaClient extends Client {
         xmlHttp.open('GET', `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${GoogleCSE}&filter=0&imgSize=icon&num=1&key=${GoogleAPI}`, false)
         xmlHttp.send(null)
         const searchThumbnail = xmlHttp.responseText
-        const searchObject = JSON.parse(searchThumbnail)
+        const searchObject    = JSON.parse(searchThumbnail)
         console.log(`${Date()}: New search result for: ${searchQuery}, filed it.`)
         if (searchObject) {
             if (searchObject.items) {
@@ -479,7 +479,7 @@ class MyKlasaClient extends Client {
 
 }
 
-new MyKlasaClient(config).login(token);
+new MyKlasaClient(config).login(token_test);
 
 Array.prototype.clean = function (deleteValue) {
     for (let i = 0; i < this.length; i++) {
