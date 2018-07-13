@@ -41,15 +41,15 @@ module.exports = class extends Event {
                     .then(role => {
                         // client.logger.log(`[AUTO-ROLE CREATED] Created new role with name ${role.name} and color ${role.color}`)
                         newMember.roles.add(role)
-                    .catch(console.error)
+                    // .catch(console.error)
                         // const role2 = guild.roles.find('name', `In ${game_new.name}`)
                         // client.logger.cmd(`[AUTO-ROLE CREATED] adding person ${newMember.user.username} to role ${role2.name}, currently ${role2.members.size} members of said role.`)
                     })
-                    .catch(console.error)
+                    // .catch(console.error)
             }
             else {
                 newMember.roles.add(playRole)
-                    .catch(console.error)
+                    // .catch(console.error)
                 // const role = guild.roles.find('name', `In ${game_new.name}`)
                 // client.logger.cmd(`[AUTO-ROLE SET] adding person ${newMember.user.username} to role ${role.name}, currently ${role.members.size} members of said role.`)
             }
@@ -74,10 +74,10 @@ module.exports = class extends Event {
                     // client.logger.cmd(`[AUTO-ROLE DELETE] role ${role.name} is currently empty, deleting said role.`)
                     // role.delete()
                     playRole.delete()
-                    .catch (console.error)
+                    // .catch (console.error)
                 } else if (newMember.roles.has(playRole.id)){
                     newMember.roles.remove(playRole,'playing stop')
-                    .catch(console.error)
+                    // .catch(console.error)
                 }
             }
         }
